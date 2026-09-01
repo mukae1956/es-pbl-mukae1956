@@ -1,0 +1,31 @@
+PUT /contents
+{
+  "mappings": {
+    "properties": {
+      "content_id": {
+        "type": "keyword"
+      },
+      "title": {
+        "type": "text"
+      },
+      "available": {
+        "type": "boolean"
+      },
+      "genre": {
+        "type": "keyword"
+      },
+      "running_time": {
+        "type": "integer"
+      },
+      "rating": {
+        "type": "float"
+      },
+      "cast": {
+        "type": "text"
+      },
+      "director": {
+        "type": "text"
+      }
+    }
+  }
+}
