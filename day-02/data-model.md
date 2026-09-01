@@ -2,7 +2,7 @@
 
 ## V1-T09-P · 문서 단위
 
-- 개인 index 이름:
+- 개인 index 이름: contents
 - 검색 결과 한 줄 / 문서 한 건의 의미:
 - 업무 ID field / 예시 값:
 - ES _id와 업무 ID 관계:
