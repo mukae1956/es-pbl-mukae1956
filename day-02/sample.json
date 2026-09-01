@@ -1,0 +1,30 @@
+{
+  "content_id": "c_0001",
+  "title": "미드나잇 라이브러리",
+  "available": true,
+  "genre": "드라마",
+  "running_time": 98,
+  "rating": 4.3,
+  "cast": "이민호, 유아인",
+  "director": "이상용"
+},
+{
+  "content_id": "c_0002",
+  "title": "은하수를 건너서",
+  "available": true,
+  "genre": "SF",
+  "running_time": 132,
+  "rating": 4.6,
+  "cast": "박서준, 한소희",
+  "director": "김지운"
+},
+{
+  "content_id": "c_0003",
+  "title": "겨울의 끝자락",
+  "available": false,
+  "genre": "멜로",
+  "running_time": 105,
+  "rating": 3.8,
+  "cast": "정해인, 김태리",
+  "director": "이창동"
+}
