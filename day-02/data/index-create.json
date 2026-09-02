@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "analysis": {
+      "analyzer": {
+        "korean_search": {
+          "type": "standard",
+          "stopwords": "_none_"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "content_id": { "type": "keyword" },
+      "title": { "type": "text", "analyzer": "korean_search", "fields": { "keyword": { "type": "keyword", "ignore_above": 256 } } },
+      "available": { "type": "boolean" },
+      "genre": { "type": "keyword" },
+      "running_time": { "type": "integer" },
+      "rating": { "type": "float" },
+      "cast": { "type": "text", "analyzer": "korean_search" },
+      "director": { "type": "text", "analyzer": "korean_search" }
+    }
+  }
+}

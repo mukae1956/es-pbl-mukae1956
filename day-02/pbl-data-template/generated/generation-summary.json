@@ -1,0 +1,49 @@
+{
+    "index":  "contents",
+    "document_count":  1000,
+    "seed":  20260901,
+    "id_field":  "content_id",
+    "files":  {
+                  "bulk":  "contents-1000.ndjson",
+                  "sample":  "contents-sample-30.ndjson"
+              },
+    "field_kinds":  [
+                        {
+                            "name":  "content_id",
+                            "kind":  "id"
+                        },
+                        {
+                            "name":  "genre",
+                            "kind":  "choice"
+                        },
+                        {
+                            "name":  "title",
+                            "kind":  "template"
+                        },
+                        {
+                            "name":  "available",
+                            "kind":  "boolean"
+                        },
+                        {
+                            "name":  "running_time",
+                            "kind":  "integer"
+                        },
+                        {
+                            "name":  "rating",
+                            "kind":  "decimal"
+                        },
+                        {
+                            "name":  "director",
+                            "kind":  "choice"
+                        },
+                        {
+                            "name":  "cast",
+                            "kind":  "tags"
+                        }
+                    ],
+    "generated_at":  "deterministic-from-seed",
+    "fixed_document_count":  0,
+    "settings_sha256":  "57D0D5C1BE9706BA12295C77A0E5EB0D2F8CAB8DCE2E06FB4A08128CFA5AB7DC",
+    "bulk_sha256":  "8B4B861D80D343053B56FD4DC58E731EFAF633C1978BBAE96CAE9CE3E2653EA7",
+    "mapping_sha256":  "BBD4EE17EF360EB1884867AEED0EDD0D52C24ACF22C6B805A08EFDBA1F02C9EF"
+}

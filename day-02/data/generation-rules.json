@@ -1,0 +1,15 @@
+{
+  "dataset": "contents",
+  "document_count": 1000,
+  "seed": 20260901,
+  "genres": 7,
+  "available_true_ratio": 0.70,
+  "missing_cast_ratio": 0.02,
+  "running_time_range": [70, 180],
+  "rating_range": [2.0, 5.0],
+  "required_dashboard_questions": [
+    "드라마 장르 전체 보여줘",
+    "평점이 4.0 이상인 작품들을 평점 높은 순으로 정렬",
+    "시청 가능한 작품 중 러닝타임이 90분 이상 150분 이하, 짧은 순 정렬"
+  ]
+}

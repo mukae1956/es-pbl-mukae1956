@@ -1,0 +1,30 @@
+### V1-T12-C · S33 개인 생성. GET /contents로 확인하고 없을 때만 PUT한다.
+# 기존 contents는 삭제하지 않는다. 이미 존재하면 mapping/count/분포를 확인한다.
+# 개인 mapping 정본은 elasticsearch/index-create.json이다.
+
+### 1 shard + 1 replica, 개인 mapping 생성
+PUT /contents
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "properties": {
+      "content_id": { "type": "keyword" },
+      "title": { "type": "text" },
+      "available": { "type": "boolean" },
+      "genre": { "type": "keyword" },
+      "running_time": { "type": "integer" },
+      "rating": { "type": "float" },
+      "cast": { "type": "text" },
+      "director": { "type": "text" }
+    }
+  }
+}
+
+### mapping 확인
+GET /contents/_mapping
+
+### shard 배치 확인
+GET /_cat/shards/contents?v
