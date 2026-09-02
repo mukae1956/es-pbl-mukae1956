@@ -14,12 +14,12 @@ GET /products/_search
 
 ### 결과 입력
 
-- HTTP 성공 여부:
-- `hits.total.value`:
-- `hits.hits`에 반환된 문서 수:
-- 첫 번째 문서의 `_id`:
-- 첫 번째 문서의 `_source` field 3개:
-- `hits.total.value`와 반환 문서 수가 다를 수 있는 이유:
+- HTTP 성공 여부: 성공
+- `hits.total.value`: 10000
+- `hits.hits`에 반환된 문서 수: 5
+- 첫 번째 문서의 `_id`:P-00003
+- 첫 번째 문서의 `_source` field 3개:product_id, name, description
+- `hits.total.value`와 반환 문서 수가 다를 수 있는 이유:size 파라미터로 실제 반환 개수를 5로 제한했기 때문
 
 ## (공통) 문제 2 — 반환 개수와 field 직접 구현
 
@@ -33,9 +33,9 @@ GET /products/_search
 
 ### 결과 입력
 
-- 반환 문서 수:
-- `_source`에 요구하지 않은 field가 포함됐는가:
-- 검증한 문서 ID:
+- 반환 문서 수:3
+- `_source`에 요구하지 않은 field가 포함됐는가:없음, 요구한 4개 field 출력
+- 검증한 문서 ID:P-00003, P-00004, P-00008
 
 ## (공통) 문제 3 — 정렬이 포함된 전체 조회 구현
 
@@ -49,9 +49,9 @@ GET /products/_search
 
 ### 결과 입력
 
-- 첫 3개 문서의 ID와 price:
-- 오름차순 여부:
-- 두 문서의 price가 같을 때 순서가 고정된다고 말할 수 있는가? 근거:
+- 첫 3개 문서의 ID와 price:P-00431(5900), P-6599(5900), P-06479(5900)
+- 오름차순 여부: 예
+- 두 문서의 price가 같을 때 순서가 고정된다고 말할 수 있는가? 근거:고정된다고 말할 수 없음/ sort에 price 하나만 지정하였고 2차 정렬 기준을 부여하지 않았기 때문
 
 ## (개인) 문제 4 — 자기 index의 첫 Search API
 
@@ -69,11 +69,11 @@ GET /products/_search
 
 ```
 
-- 자기 index:
-- `_count`:
-- `hits.total.value`:
-- 반환 문서 수:
-- 판정과 근거:
+- 자기 index:contents
+- `_count`:1000
+- `hits.total.value`:1000
+- 반환 문서 수:5
+- 판정과 근거:_count의 값과 hist.total.value의 값은 같음!
 
 ## (개인) 문제 5 — 결과 카드 field 설계
 
@@ -91,7 +91,7 @@ GET /products/_search
 
 ```
 
-- 포함한 field와 이유:
-- 제외한 field와 이유:
-- 실제 반환 문서 ID:
-- 완료 판정:
+- 포함한 field와 이유:content_id(카드 클릭 시 상세페이지로 넘어갈 식별자), title(제목), genre(장르로 취향 판단), rating(평점으로 추천 판단), available(시청 가능 여부로 바로 볼 수 있는지 판단)
+- 제외한 field와 이유:running_time, cast, director는 제외 - 카드 단계는 빠르게 훑어보는 용도라 필수 판단 정보만 제공
+- 실제 반환 문서 ID:CT-00001, CT-00002, CT-00003, CT-00004, CT-00005
+- 완료 판정: 요구한 5개 field만 정확히 반환했으므로 완료
