@@ -12,10 +12,10 @@ GET /products/_search
 
 ### 결과 입력
 
-- `hits.total.value`:
-- 상위 3개 문서 ID:
-- 상위 3개 문서의 category:
-- 모든 확인 문서가 정확 조건을 만족하는가:
+- `hits.total.value`:1250
+- 상위 3개 문서 ID:P-00009, P-00025, P-00081
+- 상위 3개 문서의 category:전자기기
+- 모든 확인 문서가 정확 조건을 만족하는가:만족함
 - `term`을 선택한 mapping 근거:
 
 ## (공통) 문제 2 — text 전문 검색 직접 구현
@@ -25,14 +25,18 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+    "size": 5,
+    "query": { "match": { "name": "무선"}}
+}
 ```
 
 ### 결과 입력
 
-- 선택한 query와 이유:
-- `hits.total.value`:
-- 상위 3개 ID·name:
+- 선택한 query와 이유: match 쿼리 선택 - name은 text 타입이라 토큰 단위로 비교하는 match가 적합하다고 파악함 (term은 분석 없이 원문 그대로 비교함!)
+- `hits.total.value`:505
+- 상위 3개 ID·name:P-00025(MobiCore 컴팩트 무선 이어폰),P-00042(CleanMate 실속형 무선 청소기),P-00129(Auralis 스마트 무선 이어폰)
 
 ## (공통) 문제 3 — 부적절한 조합 비교
 
@@ -41,15 +45,19 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+    "size": 5,
+    "query": { "term": { "name": "무선"}}
+}
 ```
 
 ### 비교 결과
 
-- 문제 2 total / 문제 3 total:
-- 공통으로 나온 문서 ID:
-- 달라진 이유:
-- `term`은 text에서 항상 0건인가? 실제 근거:
+- 문제 2 total / 문제 3 total: 505 / 505
+- 공통으로 나온 문서 ID:P-00025, P-00042, P-00129, P-00153, P-00209
+- 달라진 이유: 달라지지 않았음 -> "무선"이 대문자 변환이나 형태소 분리가 필요 없는 순수 한글 토큰이라 원문 그대로 토큰이 생성 됨
+- `term`은 text에서 항상 0건인가? 실제 근거: 아님!!, term은 분석 없이 원문 그대로 토큰과 비교하므로 실제로 동일한 토큰이 있으면 0건이 나오지 않음
 
 ## (개인) 문제 4 — 자기 정확 조건 검색
 
@@ -64,13 +72,17 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+GET /contents/_search
+{
+  "size": 5,
+  "query": { "term": { "genre": "드라마" } }
+}
 ```
 
 - field / type / 값:
-- 사용자 질문:
-- 상위 3개 ID와 실제 값:
-- 통과/실패와 근거:
+- 사용자 질문: 드라마 장르인 ott 콘텐츠들을 출력해 줘
+- 상위 3개 ID와 실제 값: CT-00004(드라마), CT-00008(드라마), CT-00017(드라마)
+- 통과/실패와 근거: 전체적으로 통과함
 
 ## (개인) 문제 5 — 자기 전문 검색
 
@@ -85,10 +97,14 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+GET /contents/_search
+{
+  "size": 5,
+  "query": { "match": { "cast": "이민호" } }
+}
 ```
 
-- field / type / 검색어:
-- 상위 3개 ID:
-- 관련/보류/무관과 이유:
-- 완료 판정:
+- field / type / 검색어: cast / text/ 이민호
+- 상위 3개 ID: CT-00003, CT-00063, CT-00068
+- 관련/보류/무관과 이유: 3건 모두 관련. 세 문서의 cast 배열에 전부 "이민호"가 정확히 들어있어서, 검색 의도(이민호가 출연한 작품 찾기)와 실제 반환 문서가 정확히 일치함. (참고: _score가 5건 전부 1.897378로 동일한데, 이건 cast가 단순 배열 텍스트라 "이민호" 포함 여부만 반영되고 관련도를 더 세분화할 다른 요소가 없어서 그런 것)
+- 완료 판정: 완료
