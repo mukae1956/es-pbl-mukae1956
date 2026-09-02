@@ -28,7 +28,12 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+  "size": 3,
+  "query": { "match_all": {} },
+  "_source": ["product_id", "name", "price", "in_stock"]
+}
 ```
 
 ### 결과 입력
@@ -44,7 +49,15 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+  "size": 10,
+  "query": { "match_all": {} },
+  "_source": ["product_id", "name", "price"],
+  "sort": [
+    { "price": "asc" }
+  ]
+}
 ```
 
 ### 결과 입력
@@ -66,7 +79,11 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+GET /contents/_search
+{
+    "size":5,
+    "query":{ "match_all": {}}
+}
 ```
 
 - 자기 index:contents
@@ -88,7 +105,13 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+GET /contents/_count
+GET /contents/_search
+{
+    "size":5,
+    "query": { "match_all": {}},
+    "_source":["content_id", "title","genre","rating","available"]
+}
 ```
 
 - 포함한 field와 이유:content_id(카드 클릭 시 상세페이지로 넘어갈 식별자), title(제목), genre(장르로 취향 판단), rating(평점으로 추천 판단), available(시청 가능 여부로 바로 볼 수 있는지 판단)
