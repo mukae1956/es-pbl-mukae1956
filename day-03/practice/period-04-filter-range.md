@@ -20,10 +20,13 @@ GET /products/_search
 
 ### 결과 입력
 
-- `hits.total.value`:
-- 확인한 문서 ID 3개:
+- `hits.total.value`: 380
+- 확인한 문서 ID 3개:P-00025, P-00129, P-00185
 - 각 문서의 category / in_stock / price:
-- 조건을 위반한 문서가 있는가:
+  - 전자기기 / true / 59400
+  - 전자기기 / true / 53800
+  - 전자기기 / true / 161600
+- 조건을 위반한 문서가 있는가: 없음
 
 ## (공통) 문제 2 — 경계 포함 범위 직접 구현
 
@@ -32,14 +35,26 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+  "size": 10,
+  "_source": ["product_id", "name", "category", "price"],
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "category": "전자기기" } },
+        { "range": { "price": { "gte": 50000, "lte": 200000 } } }
+      ]
+    }
+  }
+}
 ```
 
 ### 결과 입력
 
-- `hits.total.value`:
-- 최소·최대 price:
-- 50,000 또는 200,000 경계 문서 존재 여부와 ID:
+- `hits.total.value`:440
+- 최소·최대 price:53800 , 199300
+- 50,000 또는 200,000 경계 문서 존재 여부와 ID:없음
 
 ## (공통) 문제 3 — 경계 제외 범위 직접 구현
 
@@ -48,13 +63,25 @@ GET /products/_search
 ### API 전체 입력
 
 ```http
-
+GET /products/_search
+{
+  "size": 10,
+  "_source": ["product_id", "name", "category", "price"],
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "category": "전자기기" } },
+        { "range": { "price": { "gt": 50000, "lt": 200000 } } }
+      ]
+    }
+  }
+}
 ```
 
 ### 비교 결과
 
-- 문제 2 total / 문제 3 total:
-- 빠진 경계 문서 ID:
+- 문제 2 total / 문제 3 total: 440 / 440 
+- 빠진 경계 문서 ID: 없음
 - 경계 문서가 없어 결과가 같다면 확인한 근거:
 
 ## (개인) 문제 4 — 자기 정확 조건 2개
@@ -70,12 +97,27 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+GET /contents/_search
+{
+  "size": 10,
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "genre": "액션" } },
+        { "range": { "running_time": { "gt": 100, "lt":150 } } }
+      ]
+    }
+  }
+}
 ```
 
 - field·type·값 2개:
+  - genre(keyword) = 액션
+  - running_time(integer) = 100 초과 150 미만
 - 기대 ID / 제외 ID:
-- 실제 결과와 판정:
+  - 기대 ID : CT-00003(액션, running_time 105)
+  - 제외 ID : CT-00001(코미디, running_time 97)
+- 실제 결과와 판정: 앞에서 기대했던 ID인 CT-00003이 포함된 것을 확인하였음. 두 필터가 의도한대로 정확히 동작함 확인!
 
 ## (개인) 문제 5 — 자기 범위와 경계 실험
 
@@ -90,10 +132,35 @@ GET /products/_search
 ### API와 결과 입력
 
 ```http
-
+#포함 경계
+GET /contents/_search
+{
+  "size": 10,
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "genre": "멜로" } },
+        { "range": { "running_time": { "gte": 100, "lte": 122 } } }
+      ]
+    }
+  }
+}
+#제외 경계
+GET /contents/_search
+{
+  "size": 10,
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "genre": "멜로" } },
+        { "range": { "running_time": { "gt": 100, "lt": 122 } } }
+      ]
+    }
+  }
+}
 ```
 
-- field / type / 경계값:
-- 포함 요청 total / 제외 요청 total:
-- 달라진 문서 ID:
-- 경계 판정:
+- field / type / 경계값: genre, running_time, 100~122
+- 포함 요청 total / 제외 요청 total: 37/41
+- 달라진 문서 ID: CT-00048(running_time = 122), CT-00100(running_time = 122)
+- 경계 판정: 경계값 100~122 중 122는 실제로 존재하고 있는 값임을 확인함, 포함 및 제외 경계로 총 4개 차이난다는 사실을 확인할 수 있었음
